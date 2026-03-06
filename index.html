@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Meal Tracker — #DevanshGetsLean</title>
+    <meta name="description" content="Daily nutrition tracker for Devansh's personalized meal plan with coach review.">
+    <meta name="theme-color" content="#07070e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="top-bar-inner">
+            <div class="logo">🔥 <span>MealTrack</span></div>
+            <div class="date-badge" id="todayDate"></div>
+            <div class="sync-indicator" id="syncStatus">
+                <span class="sync-dot"></span> Synced
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== TRACKER VIEW ====== -->
+    <div class="view active" id="viewTracker">
+        <div class="container">
+            <div class="page-header">
+                <h1>Today's Plan 💪</h1>
+                <p>Track what you eat, see what's left.</p>
+            </div>
+
+            <!-- Daily Progress -->
+            <div class="daily-progress">
+                <div class="progress-ring">
+                    <svg viewBox="0 0 64 64">
+                        <circle class="track" cx="32" cy="32" r="28" />
+                        <circle class="fill" cx="32" cy="32" r="28" id="progressCircle" stroke-dasharray="175.93"
+                            stroke-dashoffset="175.93" />
+                    </svg>
+                    <div class="pct" id="progressPct">0%</div>
+                </div>
+                <div class="progress-info">
+                    <h3 id="progressTitle">Let's get started!</h3>
+                    <p id="progressSubtitle">0 of 6 items completed</p>
+                </div>
+            </div>
+
+            <!-- Pending Summary (rendered by JS) -->
+            <div id="pendingSection"></div>
+
+            <!-- Meal Cards (rendered by JS) -->
+            <div id="mealCardsContainer"></div>
+        </div>
+    </div>
+
+    <!-- ====== CHECKIN VIEW ====== -->
+    <div class="view" id="viewCheckin">
+        <div class="container">
+            <div class="page-header">
+                <h1>Daily Check-in 📋</h1>
+                <p>Log your day for coach review.</p>
+            </div>
+
+            <div class="checkin-grid">
+                <div class="checkin-field">
+                    <div class="field-icon">📅</div>
+                    <div class="field-content">
+                        <label for="ciDay">Day Number</label>
+                        <input type="number" id="ciDay" placeholder="e.g. 1" min="1">
+                    </div>
+                </div>
+                <div class="checkin-field">
+                    <div class="field-icon">⚖️</div>
+                    <div class="field-content">
+                        <label for="ciWeight">Weight (kg)</label>
+                        <input type="number" id="ciWeight" placeholder="e.g. 74.5" step="0.1">
+                    </div>
+                </div>
+                <div class="checkin-field">
+                    <div class="field-icon">🏋️</div>
+                    <div class="field-content">
+                        <label for="ciWorkout">Workout</label>
+                        <input type="text" id="ciWorkout" placeholder="e.g. Push Day, Rest, etc.">
+                    </div>
+                </div>
+                <div class="checkin-field">
+                    <div class="field-icon">👟</div>
+                    <div class="field-content">
+                        <label for="ciSteps">Steps</label>
+                        <input type="number" id="ciSteps" placeholder="e.g. 8500">
+                    </div>
+                </div>
+                <div class="checkin-field">
+                    <div class="field-icon">💧</div>
+                    <div class="field-content">
+                        <label>Water Intake</label>
+                        <div class="water-counter">
+                            <button class="water-btn" onclick="App.adjustWater(-1)">−</button>
+                            <div class="water-glasses" id="waterGlasses"></div>
+                            <button class="water-btn" onclick="App.adjustWater(1)">+</button>
+                            <span id="waterCount"
+                                style="font-weight:700;font-size:0.9rem;min-width:40px;text-align:center;">0 / 12</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="checkin-field">
+                    <div class="field-icon">⚡</div>
+                    <div class="field-content">
+                        <label>Energy Level</label>
+                        <div class="slider-wrapper">
+                            <input type="range" id="ciEnergy" min="1" max="10" value="5"
+                                oninput="document.getElementById('energyVal').textContent=this.value">
+                            <span class="slider-value" id="energyVal">5</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="checkin-field">
+                    <div class="field-icon">🔥</div>
+                    <div class="field-content">
+                        <label>Motivation Level</label>
+                        <div class="slider-wrapper">
+                            <input type="range" id="ciMotivation" min="1" max="10" value="5"
+                                oninput="document.getElementById('motivationVal').textContent=this.value">
+                            <span class="slider-value" id="motivationVal">5</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="checkin-field">
+                    <div class="field-icon">😴</div>
+                    <div class="field-content">
+                        <label for="ciSleep">Sleep (hours)</label>
+                        <input type="number" id="ciSleep" placeholder="e.g. 7.5" step="0.5">
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="App.copyDailyUpdate()">📋 Copy Update</button>
+                <button class="btn btn-primary" onclick="App.saveCheckin()">💾 Save Check-in</button>
+            </div>
+            <div style="margin-top:0.5rem;">
+                <button class="btn btn-success" onclick="App.syncToGitHub()">☁️ Sync to Cloud</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== COACH VIEW ====== -->
+    <div class="view" id="viewCoach">
+        <div class="container wide">
+            <div class="coach-header">
+                <h1>🏋️ Coach Review Panel</h1>
+                <p>Devansh's nutrition tracking data — live from GitHub</p>
+            </div>
+
+            <div class="summary-cards" id="coachSummary">
+                <div class="summary-card">
+                    <div class="sc-val" id="csAdherence">—</div>
+                    <div class="sc-label">Adherence</div>
+                </div>
+                <div class="summary-card">
+                    <div class="sc-val" id="csAvgWater">—</div>
+                    <div class="sc-label">Avg Water</div>
+                </div>
+                <div class="summary-card">
+                    <div class="sc-val" id="csAvgSleep">—</div>
+                    <div class="sc-label">Avg Sleep</div>
+                </div>
+                <div class="summary-card">
+                    <div class="sc-val" id="csAvgEnergy">—</div>
+                    <div class="sc-label">Avg Energy</div>
+                </div>
+                <div class="summary-card">
+                    <div class="sc-val" id="csAvgMotivation">—</div>
+                    <div class="sc-label">Avg Motivation</div>
+                </div>
+                <div class="summary-card">
+                    <div class="sc-val" id="csDaysTracked">—</div>
+                    <div class="sc-label">Days Tracked</div>
+                </div>
+            </div>
+
+            <div id="coachDayCards">
+                <div class="empty-state">
+                    <div class="empty-icon">📡</div>
+                    <h3>Loading data...</h3>
+                    <p>Fetching latest tracking data from GitHub.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== SETTINGS VIEW ====== -->
+    <div class="view" id="viewSettings">
+        <div class="container">
+            <div class="page-header">
+                <h1>Settings ⚙️</h1>
+                <p>Configure sync and manage data.</p>
+            </div>
+            <div class="checkin-grid">
+                <div class="checkin-field">
+                    <div class="field-icon">🔑</div>
+                    <div class="field-content">
+                        <label for="ghToken">GitHub Personal Access Token</label>
+                        <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx">
+                    </div>
+                </div>
+                <div class="checkin-field">
+                    <div class="field-icon">📁</div>
+                    <div class="field-content">
+                        <label for="ghRepo">GitHub Repo (owner/repo)</label>
+                        <input type="text" id="ghRepo" placeholder="e.g. Ethical98/meal-tracker">
+                    </div>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="App.saveSettings()">💾 Save Settings</button>
+            </div>
+            <div style="margin-top:1.5rem;">
+                <button class="btn btn-secondary" onclick="App.exportJSON()">📥 Export All Data (JSON)</button>
+            </div>
+            <div style="margin-top:0.5rem;">
+                <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Import Data
+                    (JSON)</button>
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="App.importJSON(event)">
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+        <div class="nav-items">
+            <button class="nav-item active" data-view="viewTracker">
+                <span class="nav-icon">🍽️</span> Tracker
+            </button>
+            <button class="nav-item" data-view="viewCheckin">
+                <span class="nav-icon">📋</span> Check-in
+            </button>
+            <button class="nav-item" data-view="viewCoach">
+                <span class="nav-icon">👁️</span> Coach
+            </button>
+            <button class="nav-item" data-view="viewSettings">
+                <span class="nav-icon">⚙️</span> Settings
+            </button>
+        </div>
+    </nav>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
