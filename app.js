@@ -631,7 +631,7 @@ Steps: ${ci.steps || '—'}`;
 
     async syncToGitHub() {
         const token = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_TOKEN : '';
-        const repo = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_REPO : '';
+        const repo = 'Ethical98/meal-tracker'; // Hardcoded repository name
         if (!token || !repo) {
             this.toast('⚠️ Set GitHub token & repo in config.js first');
             return;
@@ -701,7 +701,7 @@ Steps: ${ci.steps || '—'}`;
         const container = document.getElementById('coachDayCards');
 
         // Try fetching from GitHub
-        const repo = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_REPO : '';
+        const repo = 'Ethical98/meal-tracker'; // Hardcoded repository name
         let coachData = null;
 
         if (repo) {
