@@ -57,6 +57,10 @@
 
             <!-- Meal Cards (rendered by JS) -->
             <div id="mealCardsContainer"></div>
+
+            <div style="margin-top:1.5rem;text-align:center;padding-bottom:1rem;">
+                <button class="btn btn-success" onclick="App.syncTracker()">☁️ Sync Tracker to Cloud</button>
+            </div>
         </div>
     </div>
 
@@ -145,8 +149,8 @@
                 <button class="btn btn-secondary" onclick="App.copyDailyUpdate()">📋 Copy Update</button>
                 <button class="btn btn-primary" onclick="App.saveCheckin()">💾 Save Check-in</button>
             </div>
-            <div style="margin-top:0.5rem;">
-                <button class="btn btn-success" onclick="App.syncToGitHub()">☁️ Sync to Cloud</button>
+            <div style="margin-top:0.5rem;text-align:center;">
+                <button class="btn btn-success" onclick="App.syncCheckin()">☁️ Sync Check-in to Cloud</button>
             </div>
         </div>
     </div>
