@@ -25,6 +25,20 @@
             "id": "potatoes150",
             "consumed": 150
           }
+        },
+        "meal3": {
+          "base": {
+            "id": "yogurt120",
+            "consumed": 120
+          },
+          "fruit": {
+            "id": "fruit1",
+            "consumed": 1
+          },
+          "nuts": {
+            "id": "nuts5",
+            "consumed": 5
+          }
         }
       },
       "checkin": {
@@ -39,5 +53,5 @@
       }
     }
   },
-  "lastSync": "2026-03-06T14:12:32.113Z"
+  "lastSync": "2026-03-06T14:20:43.945Z"
 }
