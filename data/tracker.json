@@ -15,30 +15,6 @@
             "consumed": 5
           },
           "veggies": true
-        },
-        "meal2": {
-          "protein": {
-            "id": "tempeh",
-            "consumed": 100
-          },
-          "carbs": {
-            "id": "potatoes150",
-            "consumed": 150
-          }
-        },
-        "meal3": {
-          "base": {
-            "id": "yogurt120",
-            "consumed": 120
-          },
-          "fruit": {
-            "id": "fruit1",
-            "consumed": 1
-          },
-          "nuts": {
-            "id": "nuts5",
-            "consumed": 5
-          }
         }
       },
       "checkin": {
@@ -53,5 +29,5 @@
       }
     }
   },
-  "lastSync": "2026-03-06T14:37:11.092Z"
+  "lastSync": "2026-03-06T14:43:52.720Z"
 }
