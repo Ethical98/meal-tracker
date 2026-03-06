@@ -1,1 +1,43 @@
-{}
+{
+  "days": {
+    "2026-03-06": {
+      "meals": {
+        "morning": {
+          "done": true
+        },
+        "meal1": {
+          "protein": {
+            "id": "whey",
+            "consumed": 38
+          },
+          "fats": {
+            "id": "walnuts",
+            "consumed": 5
+          },
+          "veggies": true
+        },
+        "meal2": {
+          "protein": {
+            "id": "tempeh",
+            "consumed": 100
+          },
+          "carbs": {
+            "id": "potatoes150",
+            "consumed": 150
+          }
+        }
+      },
+      "checkin": {
+        "dayNumber": 0,
+        "weight": 0,
+        "workout": "",
+        "steps": 0,
+        "water": 0,
+        "energy": 5,
+        "motivation": 5,
+        "sleep": 0
+      }
+    }
+  },
+  "lastSync": "2026-03-06T14:11:08.706Z"
+}
