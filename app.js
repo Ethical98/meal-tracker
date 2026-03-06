@@ -192,20 +192,39 @@ const App = {
     // ——— RENDER MEAL CARDS ———
     renderMealCards() {
         const container = document.getElementById('mealCardsContainer');
-        container.innerHTML = '';
         const todayMeals = this.data.days[this.today].meals;
+        const isInitialRender = container.children.length === 0;
 
+        // Initialize DOM structure once
+        if (isInitialRender) {
+            PLAN.meals.forEach(meal => {
+                if (meal.separator) {
+                    const sep = document.createElement('div');
+                    sep.className = 'activity-sep';
+                    sep.textContent = meal.label;
+                    container.appendChild(sep);
+                    return;
+                }
+                const card = document.createElement('div');
+                card.className = `meal-card ${meal.type}`;
+                card.id = `meal-card-${meal.id}`;
+                container.appendChild(card);
+            });
+        }
+
+        // Update content of existing cards in place
         PLAN.meals.forEach(meal => {
-            if (meal.separator) {
-                const sep = document.createElement('div');
-                sep.className = 'activity-sep';
-                sep.textContent = meal.label;
-                container.appendChild(sep);
-                return;
-            }
+            if (meal.separator) return;
 
-            const card = document.createElement('div');
-            card.className = `meal-card ${meal.type}`;
+            const card = document.getElementById(`meal-card-${meal.id}`);
+            if (!card) return;
+
+            if (this.openCards.has(meal.id)) {
+                card.classList.add('open');
+            } else {
+                card.classList.remove('open');
+                card.classList.remove('animate-open');
+            }
 
             if (meal.simple) {
                 const isDone = todayMeals[meal.id]?.done || false;
@@ -222,7 +241,7 @@ const App = {
           </div>`;
             } else {
                 const status = this.getMealStatus(meal.id);
-                if (this.openCards.has(meal.id)) card.classList.add('open');
+                // By updating just the innerHTML of the card, we keep the card element itself stable
                 card.innerHTML = `
           <div class="meal-card-header">
             <div class="meal-card-left" onclick="App.toggleCard('${meal.id}', this)" style="cursor:pointer;flex:1;">
@@ -236,7 +255,6 @@ const App = {
           </div>
           <div class="meal-card-body">${this.renderMealBody(meal)}</div>`;
             }
-            container.appendChild(card);
         });
     },
 
@@ -691,8 +709,19 @@ Steps: ${ci.steps || '—'}`;
         if (repo) {
             try {
                 container.innerHTML = '<div class="empty-state"><div class="empty-icon">📡</div><h3>Loading...</h3></div>';
-                const res = await fetch(`https://raw.githubusercontent.com/${repo}/main/data/tracker.json?t=${Date.now()}`);
-                if (res.ok) coachData = await res.json();
+
+                const token = localStorage.getItem('mt_gh_token');
+                const headers = { 'Accept': 'application/vnd.github.v3.raw' };
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/data/tracker.json?t=${Date.now()}`, { headers });
+                if (res.ok) {
+                    coachData = await res.json();
+                } else {
+                    // Fallback to raw if API fails or rate limits
+                    const resRaw = await fetch(`https://raw.githubusercontent.com/${repo}/main/data/tracker.json?t=${Date.now()}`);
+                    if (resRaw.ok) coachData = await resRaw.json();
+                }
             } catch (e) { /* fallback to local */ }
         }
 
