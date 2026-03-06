@@ -128,15 +128,14 @@ const App = {
     openCards: new Set(),  // Track which meal cards are expanded
 
     // ——— INIT ———
-    init() {
-        this.loadData();
+    async init() {
+        await this.loadData();
         this.renderDate();
         this.renderMealCards();
         this.renderWater();
         this.restoreCheckin();
         this.updateProgress();
         this.renderPending();
-        this.setupNav();
         this.setupNav();
 
         // Auto-navigate to coach view if hash
@@ -167,13 +166,51 @@ const App = {
     },
 
     // ——— DATA PERSISTENCE ———
-    loadData() {
-        const raw = localStorage.getItem('mealtracker_data');
-        this.data = raw ? JSON.parse(raw) : { days: {} };
+    async loadData() {
+        // Try fetching latest data from GitHub to prefill the tracker
+        const repo = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_REPO : '';
+        const token = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_TOKEN : '';
+        let fetchedData = null;
+
+        if (repo) {
+            try {
+                const headers = { 'Accept': 'application/vnd.github.v3.raw' };
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/data/tracker.json?t=${Date.now()}`, { headers });
+                if (res.ok) {
+                    fetchedData = await res.json();
+                } else {
+                    const resRaw = await fetch(`https://raw.githubusercontent.com/${repo}/main/data/tracker.json?t=${Date.now()}`);
+                    if (resRaw.ok) fetchedData = await resRaw.json();
+                }
+            } catch (e) { console.error("Could not fetch remote data initially"); }
+        }
+
+        const localRaw = localStorage.getItem('mealtracker_data');
+        const localData = localRaw ? JSON.parse(localRaw) : { days: {} };
+
+        // Prefer fetched data over local data if recent, or merge them. For simplicity, we overwrite with remote if available.
+        this.data = fetchedData || localData;
+        if (!this.data.days) this.data.days = {};
+
         if (!this.data.days[this.today]) {
             this.data.days[this.today] = { meals: {}, checkin: {} };
         }
+
+        // Handle migration if data was somehow wiped or empty for today but we have local backup
+        if (fetchedData && localData && localData.days && localData.days[this.today] && Object.keys(this.data.days[this.today].meals).length === 0) {
+            // Merge in local if remote is empty for today (e.g. tracking locally first then switching devices)
+            this.data.days[this.today] = localData.days[this.today];
+        }
+
+        // Normalize all boolean fields (handles "true"/"false" strings from GitHub/external sources)
+        this.normalizeData(this.data);
+
         this.water = this.data.days[this.today].checkin?.water || 0;
+
+        // Sync local storage state
+        localStorage.setItem('mealtracker_data', JSON.stringify(this.data));
     },
 
     saveData() {
@@ -227,7 +264,8 @@ const App = {
             }
 
             if (meal.simple) {
-                const isDone = todayMeals[meal.id]?.done || false;
+                const mealObj = todayMeals[meal.id];
+                const isDone = this.parseBool(mealObj?.done);
                 card.innerHTML = `
           <div class="meal-card-header" onclick="App.toggleSimpleMeal('${meal.id}', this)">
             <div class="meal-card-left">
@@ -298,7 +336,7 @@ const App = {
         });
 
         if (meal.hasVeggies) {
-            const vegDone = mealData.veggies || false;
+            const vegDone = this.parseBool(mealData?.veggies);
             html += `<div class="veggies-toggle">
         <span>🥬 Veggies Added</span>
         <label class="toggle"><input type="checkbox" ${vegDone ? 'checked' : ''}
@@ -486,7 +524,12 @@ const App = {
     toggleSimpleMeal(mealId, el) {
         const mealData = this.data.days[this.today].meals;
         if (!mealData[mealId]) mealData[mealId] = {};
-        mealData[mealId].done = !mealData[mealId].done;
+
+        // Handle migration from boolean to string format naturally
+        const currentDone = mealData[mealId].done;
+        const isCurrentlyDone = currentDone === true || currentDone === "true";
+        mealData[mealId].done = !isCurrentlyDone; // always save native boolean
+
         this.saveData();
         this.renderMealCards();
         this.updateProgress();
@@ -513,7 +556,7 @@ const App = {
 
         trackableMeals.forEach(meal => {
             if (meal.simple) {
-                if (todayMeals[meal.id]?.done) done++;
+                if (this.parseBool(todayMeals[meal.id]?.done)) done++;
             } else {
                 const status = this.getMealStatus(meal.id);
                 if (status.class === 'done') done++;
@@ -591,7 +634,7 @@ const App = {
         const getMealText = (mealId) => {
             const m = meals[mealId];
             if (!m) return '❌ Not logged';
-            if (m.done) return '✅ Done';
+            if (m.done === true || m.done === "true") return '✅ Done';
             if (m.alt) return '✅ Subway (eating out)';
             const parts = Object.entries(m).filter(([k]) => k !== 'veggies' && k !== 'alt')
                 .map(([k, v]) => {
@@ -629,15 +672,25 @@ Steps: ${ci.steps || '—'}`;
         });
     },
 
-    async syncToGitHub() {
+    async syncTracker() {
+        // Just saves data and uploads
+        this.saveData();
+        await this.syncToGitHub('Tracker');
+    },
+
+    async syncCheckin() {
+        this.saveCheckin(); // ensures checkin fields are mapped
+        await this.syncToGitHub('Check-in');
+    },
+
+    async syncToGitHub(sourceStr) {
         const token = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_TOKEN : '';
         const repo = 'Ethical98/meal-tracker'; // Hardcoded repository name
         if (!token || !repo) {
-            this.toast('⚠️ Set GitHub token & repo in config.js first');
+            this.toast('⚠️ Set GitHub token in config.js first');
             return;
         }
 
-        this.saveCheckin();
         this.setSyncStatus('syncing');
 
         try {
@@ -673,7 +726,7 @@ Steps: ${ci.steps || '—'}`;
 
             if (res.ok) {
                 this.setSyncStatus('synced');
-                this.toast('☁️ Synced to GitHub! Coach can see your updates.', 'success');
+                this.toast(`☁️ ${sourceStr} Synced to GitHub!`, 'success');
             } else {
                 throw new Error(`HTTP ${res.status}`);
             }
@@ -745,7 +798,8 @@ Steps: ${ci.steps || '—'}`;
             const trackable = PLAN.meals.filter(m => !m.separator);
             let done = 0;
             trackable.forEach(m => {
-                if (m.simple && meals[m.id]?.done) done++;
+                const isDone = this.parseBool(meals[m.id]?.done);
+                if (m.simple && isDone) done++;
                 else if (!m.simple && this.getMealStatusFromData(m.id, meals) === 'done') done++;
             });
             totalAdherence += (done / trackable.length) * 100;
@@ -773,7 +827,8 @@ Steps: ${ci.steps || '—'}`;
             const trackable = PLAN.meals.filter(m => !m.separator);
             let done = 0;
             trackable.forEach(m => {
-                if (m.simple && meals[m.id]?.done) done++;
+                const isDone = this.parseBool(meals[m.id]?.done);
+                if (m.simple && isDone) done++;
                 else if (!m.simple && this.getMealStatusFromData(m.id, meals) === 'done') done++;
             });
             const adh = Math.round((done / trackable.length) * 100);
@@ -822,8 +877,22 @@ Steps: ${ci.steps || '—'}`;
     },
 
     reviewMealRow(label, mealData, mealId) {
-        if (!mealData) return `<div class="review-row"><span class="review-label">${label}</span><span class="review-value miss">✗ Missed</span></div>`;
-        if (mealData.done) return `<div class="review-row"><span class="review-label">${label}</span><span class="review-value check">✓ Done</span></div>`;
+        // Resolve whether this is a simple meal (morning/presleep type) — works with or without mealId
+        const mealDef = mealId ? PLAN.meals.find(x => x.id === mealId) : null;
+        const isSimple = mealDef?.simple || (!mealId && mealData && 'done' in mealData);
+
+        if (isSimple) {
+            const isDone = this.parseBool(mealData?.done);
+            if (!mealData || !isDone) {
+                return `<div class="review-row"><span class="review-label">${label}</span><span class="review-value miss">✗ Missed</span></div>`;
+            }
+            return `<div class="review-row"><span class="review-label">${label}</span><span class="review-value check">✓ Done</span></div>`;
+        }
+
+        if (!mealData) {
+            return `<div class="review-row"><span class="review-label">${label}</span><span class="review-value miss">✗ Missed</span></div>`;
+        }
+        if (this.parseBool(mealData.done)) return `<div class="review-row"><span class="review-label">${label}</span><span class="review-value check">✓ Done</span></div>`;
         if (mealData.alt) return `<div class="review-row"><span class="review-label">${label}</span><span class="review-value check">✓ Subway</span></div>`;
 
         if (mealId) {
@@ -846,6 +915,32 @@ Steps: ${ci.steps || '—'}`;
     },
 
     // ——— EXPORT/IMPORT ———
+
+    // ——— BOOLEAN UTILITIES ———
+    // Robustly converts any boolean-like value (true, false, "true", "false", 1, 0, null) to a native boolean.
+    // This is the single source of truth for all done/veggies flag reads across the app.
+    parseBool(val) {
+        if (val === true || val === 1) return true;
+        if (val === false || val === 0 || val === null || val === undefined) return false;
+        if (typeof val === 'string') return val.trim().toLowerCase() === 'true';
+        return Boolean(val);
+    },
+
+    // Normalize all boolean string fields to native booleans in the entire data object.
+    // Called after loading from GitHub or localStorage to prevent string "false"/"true" bugs.
+    normalizeData(data) {
+        if (!data?.days) return data;
+        Object.values(data.days).forEach(day => {
+            if (!day?.meals) return;
+            Object.values(day.meals).forEach(meal => {
+                if (!meal || typeof meal !== 'object') return;
+                if ('done' in meal) meal.done = this.parseBool(meal.done);
+                if ('veggies' in meal) meal.veggies = this.parseBool(meal.veggies);
+            });
+        });
+        return data;
+    },
+
     exportJSON() {
         const blob = new Blob([JSON.stringify(this.data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
