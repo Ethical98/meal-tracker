@@ -9,7 +9,10 @@
     <meta name="theme-color" content="#07070e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="stylesheet" href="style.css">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 
 <body>
@@ -201,10 +204,12 @@
                 <p>Export or import your tracking data.</p>
             </div>
             <div style="margin-top:1.5rem;">
-                <button class="btn btn-secondary" style="width:100%" onclick="App.exportJSON()">📥 Export All Data (JSON)</button>
+                <button class="btn btn-secondary" style="width:100%" onclick="App.exportJSON()">📥 Export All Data
+                    (JSON)</button>
             </div>
             <div style="margin-top:0.5rem;">
-                <button class="btn btn-secondary" style="width:100%" onclick="document.getElementById('importFile').click()">📤 Import Data (JSON)</button>
+                <button class="btn btn-secondary" style="width:100%"
+                    onclick="document.getElementById('importFile').click()">📤 Import Data (JSON)</button>
                 <input type="file" id="importFile" accept=".json" style="display:none" onchange="App.importJSON(event)">
             </div>
         </div>
@@ -231,8 +236,8 @@
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
 
-    <script src="config.js"></script>
-    <script src="app.js"></script>
+    <script src="config.js?v=2"></script>
+    <script src="app.js?v=2"></script>
 </body>
 
 </html>
