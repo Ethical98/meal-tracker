@@ -14,7 +14,7 @@
             "id": "walnuts",
             "consumed": 5
           },
-          "veggies": true
+          "veggies": false
         }
       },
       "checkin": {
@@ -29,5 +29,5 @@
       }
     }
   },
-  "lastSync": "2026-03-06T14:54:26.486Z"
+  "lastSync": "2026-03-06T14:54:31.569Z"
 }
