@@ -137,7 +137,7 @@ const App = {
         this.updateProgress();
         this.renderPending();
         this.setupNav();
-        this.loadSettings();
+        this.setupNav();
 
         // Auto-navigate to coach view if hash
         if (location.hash === '#coach') {
@@ -629,13 +629,11 @@ Steps: ${ci.steps || '—'}`;
         });
     },
 
-    // ——— GITHUB SYNC ———
     async syncToGitHub() {
-        const token = localStorage.getItem('mt_gh_token');
-        const repo = localStorage.getItem('mt_gh_repo');
+        const token = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_TOKEN : '';
+        const repo = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_REPO : '';
         if (!token || !repo) {
-            this.toast('⚠️ Set GitHub token & repo in Settings first');
-            this.switchView('viewSettings');
+            this.toast('⚠️ Set GitHub token & repo in config.js first');
             return;
         }
 
@@ -703,14 +701,14 @@ Steps: ${ci.steps || '—'}`;
         const container = document.getElementById('coachDayCards');
 
         // Try fetching from GitHub
-        const repo = localStorage.getItem('mt_gh_repo');
+        const repo = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_REPO : '';
         let coachData = null;
 
         if (repo) {
             try {
                 container.innerHTML = '<div class="empty-state"><div class="empty-icon">📡</div><h3>Loading...</h3></div>';
 
-                const token = localStorage.getItem('mt_gh_token');
+                const token = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_TOKEN : '';
                 const headers = { 'Accept': 'application/vnd.github.v3.raw' };
                 if (token) headers['Authorization'] = `Bearer ${token}`;
 
@@ -845,22 +843,6 @@ Steps: ${ci.steps || '—'}`;
         }
 
         return `<div class="review-row"><span class="review-label">${label}</span><span class="review-value check">✓</span></div>`;
-    },
-
-    // ——— SETTINGS ———
-    saveSettings() {
-        const token = document.getElementById('ghToken').value.trim();
-        const repo = document.getElementById('ghRepo').value.trim();
-        if (token) localStorage.setItem('mt_gh_token', token);
-        if (repo) localStorage.setItem('mt_gh_repo', repo);
-        this.toast('Settings saved! ✓', 'success');
-    },
-
-    loadSettings() {
-        const token = localStorage.getItem('mt_gh_token') || '';
-        const repo = localStorage.getItem('mt_gh_repo') || '';
-        document.getElementById('ghToken').value = token;
-        document.getElementById('ghRepo').value = repo;
     },
 
     // ——— EXPORT/IMPORT ———

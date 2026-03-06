@@ -193,38 +193,18 @@
         </div>
     </div>
 
-    <!-- ====== SETTINGS VIEW ====== -->
+    <!-- ====== DATA VIEW ====== -->
     <div class="view" id="viewSettings">
         <div class="container">
             <div class="page-header">
-                <h1>Settings ⚙️</h1>
-                <p>Configure sync and manage data.</p>
-            </div>
-            <div class="checkin-grid">
-                <div class="checkin-field">
-                    <div class="field-icon">🔑</div>
-                    <div class="field-content">
-                        <label for="ghToken">GitHub Personal Access Token</label>
-                        <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx">
-                    </div>
-                </div>
-                <div class="checkin-field">
-                    <div class="field-icon">📁</div>
-                    <div class="field-content">
-                        <label for="ghRepo">GitHub Repo (owner/repo)</label>
-                        <input type="text" id="ghRepo" placeholder="e.g. Ethical98/meal-tracker">
-                    </div>
-                </div>
-            </div>
-            <div class="btn-row">
-                <button class="btn btn-primary" onclick="App.saveSettings()">💾 Save Settings</button>
+                <h1>Data Management 📁</h1>
+                <p>Export or import your tracking data.</p>
             </div>
             <div style="margin-top:1.5rem;">
-                <button class="btn btn-secondary" onclick="App.exportJSON()">📥 Export All Data (JSON)</button>
+                <button class="btn btn-secondary" style="width:100%" onclick="App.exportJSON()">📥 Export All Data (JSON)</button>
             </div>
             <div style="margin-top:0.5rem;">
-                <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Import Data
-                    (JSON)</button>
+                <button class="btn btn-secondary" style="width:100%" onclick="document.getElementById('importFile').click()">📤 Import Data (JSON)</button>
                 <input type="file" id="importFile" accept=".json" style="display:none" onchange="App.importJSON(event)">
             </div>
         </div>
@@ -243,7 +223,7 @@
                 <span class="nav-icon">👁️</span> Coach
             </button>
             <button class="nav-item" data-view="viewSettings">
-                <span class="nav-icon">⚙️</span> Settings
+                <span class="nav-icon">📁</span> Data
             </button>
         </div>
     </nav>
@@ -251,6 +231,7 @@
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
 
+    <script src="config.js"></script>
     <script src="app.js"></script>
 </body>
 
