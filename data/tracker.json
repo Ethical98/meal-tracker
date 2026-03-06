@@ -3,7 +3,7 @@
     "2026-03-06": {
       "meals": {
         "morning": {
-          "done": true
+          "done": "false"
         },
         "meal1": {
           "protein": {
@@ -29,5 +29,5 @@
       }
     }
   },
-  "lastSync": "2026-03-06T14:59:39.168Z"
+  "lastSync": "2026-03-06T14:59:48.185Z"
 }
