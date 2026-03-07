@@ -122,7 +122,7 @@ const PLAN = {
 
 // ——— APP STATE ———
 const App = {
-    today: new Date().toISOString().split('T')[0],
+    today: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; })(),
     data: {},      // All tracking data { days: { "2026-03-06": { meals: {}, checkin: {} } } }
     water: 0,
     openCards: new Set(),  // Track which meal cards are expanded
