@@ -126,6 +126,16 @@ const App = {
     data: {},      // All tracking data { days: { "2026-03-06": { meals: {}, checkin: {} } } }
     water: 0,
     openCards: new Set(),  // Track which meal cards are expanded
+    _tapCount: 0,
+    _tapTimer: null,
+
+    // Hash ↔ View mapping
+    _hashMap: {
+        '#tracker': 'viewTracker',
+        '#checkin': 'viewCheckin',
+        '#coach': 'viewCoach',
+        '#data': 'viewSettings',
+    },
 
     // ——— INIT ———
     async init() {
@@ -137,12 +147,15 @@ const App = {
         this.updateProgress();
         this.renderPending();
         this.setupNav();
+        this.setupHiddenGesture();
 
-        // Auto-navigate to coach view if hash
-        if (location.hash === '#coach') {
-            this.switchView('viewCoach');
-            this.loadCoachData();
-        }
+        // Route to correct view from URL hash (default: tracker)
+        this.navigateToHash(location.hash || '#tracker');
+
+        // Listen for back/forward browser navigation
+        window.addEventListener('hashchange', () => {
+            this.navigateToHash(location.hash || '#tracker');
+        });
     },
 
     // ——— NAVIGATION ———
@@ -150,10 +163,17 @@ const App = {
         document.querySelectorAll('.nav-item').forEach(btn => {
             btn.addEventListener('click', () => {
                 const view = btn.dataset.view;
-                this.switchView(view);
-                if (view === 'viewCoach') this.loadCoachData();
+                // Derive hash from view ID
+                const hash = Object.entries(this._hashMap).find(([, v]) => v === view)?.[0] || '#tracker';
+                location.hash = hash; // triggers hashchange → navigateToHash
             });
         });
+    },
+
+    navigateToHash(hash) {
+        const viewId = this._hashMap[hash] || 'viewTracker';
+        this.switchView(viewId);
+        if (viewId === 'viewCoach') this.loadCoachData();
     },
 
     switchView(viewId) {
@@ -169,7 +189,7 @@ const App = {
     async loadData() {
         // Try fetching latest data from GitHub to prefill the tracker
         const repo = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_REPO : '';
-        const token = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_TOKEN : '';
+        const token = this.getToken();
         let fetchedData = null;
 
         if (repo) {
@@ -684,10 +704,10 @@ Steps: ${ci.steps || '—'}`;
     },
 
     async syncToGitHub(sourceStr) {
-        const token = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_TOKEN : '';
+        const token = this.getToken();
         const repo = 'Ethical98/meal-tracker'; // Hardcoded repository name
         if (!token || !repo) {
-            this.toast('⚠️ Set GitHub token in config.js first');
+            this.toast('⚠️ Set GitHub token first (triple-tap logo)');
             return;
         }
 
@@ -761,7 +781,7 @@ Steps: ${ci.steps || '—'}`;
             try {
                 container.innerHTML = '<div class="empty-state"><div class="empty-icon">📡</div><h3>Loading...</h3></div>';
 
-                const token = typeof CONFIG !== 'undefined' ? CONFIG.GITHUB_TOKEN : '';
+                const token = this.getToken();
                 const headers = { 'Accept': 'application/vnd.github.v3.raw' };
                 if (token) headers['Authorization'] = `Bearer ${token}`;
 
@@ -912,6 +932,74 @@ Steps: ${ci.steps || '—'}`;
         }
 
         return `<div class="review-row"><span class="review-label">${label}</span><span class="review-value check">✓</span></div>`;
+    },
+
+    // ——— TOKEN & SETTINGS ———
+    getToken() {
+        const stored = localStorage.getItem('mealtracker_gh_token');
+        if (stored) return stored;
+        return typeof CONFIG !== 'undefined' && CONFIG.GITHUB_TOKEN ? CONFIG.GITHUB_TOKEN : '';
+    },
+
+    setupHiddenGesture() {
+        const logo = document.querySelector('.top-bar .logo');
+        if (!logo) return;
+        logo.style.cursor = 'pointer';
+        logo.addEventListener('click', () => {
+            this._tapCount++;
+            clearTimeout(this._tapTimer);
+            this._tapTimer = setTimeout(() => { this._tapCount = 0; }, 600);
+            if (this._tapCount >= 3) {
+                this._tapCount = 0;
+                clearTimeout(this._tapTimer);
+                this.openSettings();
+            }
+        });
+    },
+
+    openSettings() {
+        const overlay = document.getElementById('settingsOverlay');
+        const input = document.getElementById('ghTokenInput');
+        const stored = localStorage.getItem('mealtracker_gh_token');
+        if (stored) input.value = stored;
+        else if (typeof CONFIG !== 'undefined' && CONFIG.GITHUB_TOKEN) input.value = CONFIG.GITHUB_TOKEN;
+        else input.value = '';
+        input.type = 'password';
+        document.getElementById('tokenToggle').textContent = '👁️';
+        overlay.classList.add('open');
+    },
+
+    closeSettings() {
+        document.getElementById('settingsOverlay').classList.remove('open');
+    },
+
+    saveToken() {
+        const val = document.getElementById('ghTokenInput').value.trim();
+        if (!val) {
+            this.toast('⚠️ Please enter a token first');
+            return;
+        }
+        localStorage.setItem('mealtracker_gh_token', val);
+        this.toast('✅ Token saved successfully!', 'success');
+        this.closeSettings();
+    },
+
+    clearToken() {
+        localStorage.removeItem('mealtracker_gh_token');
+        document.getElementById('ghTokenInput').value = '';
+        this.toast('🗑️ Token cleared', 'success');
+    },
+
+    toggleTokenVisibility() {
+        const input = document.getElementById('ghTokenInput');
+        const btn = document.getElementById('tokenToggle');
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            btn.textContent = '👁️';
+        }
     },
 
     // ——— EXPORT/IMPORT ———

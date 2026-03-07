@@ -237,6 +237,31 @@
         </div>
     </nav>
 
+    <!-- SETTINGS MODAL (hidden — triple-tap logo to open) -->
+    <div class="settings-overlay" id="settingsOverlay" onclick="App.closeSettings()">
+        <div class="settings-modal" onclick="event.stopPropagation()">
+            <div class="settings-header">
+                <h2>⚙️ Settings</h2>
+                <button class="settings-close" onclick="App.closeSettings()">✕</button>
+            </div>
+            <div class="settings-body">
+                <label class="settings-label" for="ghTokenInput">GitHub Personal Access Token</label>
+                <p class="settings-hint">Used for syncing your tracking data to GitHub.</p>
+                <div class="token-input-row">
+                    <input type="password" id="ghTokenInput" class="settings-input" placeholder="ghp_xxxxxxxxxxxx"
+                        autocomplete="off" spellcheck="false">
+                    <button class="token-toggle" id="tokenToggle" onclick="App.toggleTokenVisibility()"
+                        title="Show/Hide">👁️</button>
+                </div>
+                <div class="settings-btn-row">
+                    <button class="btn btn-primary" onclick="App.saveToken()">💾 Save Token</button>
+                    <button class="btn btn-danger" onclick="App.clearToken()">🗑️ Clear Token</button>
+                </div>
+                <p class="settings-footer">Token is stored locally on this device only.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
 
