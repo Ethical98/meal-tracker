@@ -1,24 +1,13 @@
 {
   "days": {
-    "2026-03-06": {
-      "meals": {},
-      "checkin": {}
-    },
     "2026-03-07": {
       "meals": {
         "morning": {
           "done": true
-        },
-        "meal1": {
-          "veggies": false,
-          "protein": {
-            "id": "whey",
-            "consumed": 38
-          }
         }
       },
       "checkin": {}
     }
   },
-  "lastSync": "2026-03-07T18:42:58.822Z"
+  "lastSync": "2026-03-07T18:43:38.649Z"
 }
