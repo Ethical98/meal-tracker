@@ -4,10 +4,16 @@
       "meals": {
         "morning": {
           "done": true
+        },
+        "meal1": {
+          "protein": {
+            "id": "paneer100",
+            "consumed": 100
+          }
         }
       },
       "checkin": {}
     }
   },
-  "lastSync": "2026-03-07T18:49:01.519Z"
+  "lastSync": "2026-03-07T18:49:11.944Z"
 }
