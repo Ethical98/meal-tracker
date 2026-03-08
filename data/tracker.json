@@ -16,7 +16,13 @@
             "consumed": 10
           }
         },
-        "meal4": {},
+        "meal4": {
+          "carbs": {
+            "id": "chapati2",
+            "consumed": 40
+          },
+          "veggies": true
+        },
         "meal3": {
           "base": {
             "id": "yogurt120",
@@ -30,6 +36,20 @@
             "id": "nuts5",
             "consumed": 5
           }
+        },
+        "meal2": {
+          "protein": {
+            "id": "paneer100b",
+            "consumed": 100
+          },
+          "veggies": true,
+          "carbs": {
+            "id": "chapati",
+            "consumed": 40
+          }
+        },
+        "presleep": {
+          "done": true
         }
       },
       "checkin": {
@@ -44,5 +64,5 @@
       }
     }
   },
-  "lastSync": "2026-03-08T11:10:23.667Z"
+  "lastSync": "2026-03-08T16:44:46.798Z"
 }
