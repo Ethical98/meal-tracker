@@ -16,9 +16,7 @@
             "consumed": 10
           }
         },
-        "meal4": {
-          "alt": "subway"
-        }
+        "meal4": {}
       },
       "checkin": {
         "dayNumber": 1,
@@ -32,5 +30,5 @@
       }
     }
   },
-  "lastSync": "2026-03-08T08:30:10.909Z"
+  "lastSync": "2026-03-08T08:30:20.771Z"
 }
