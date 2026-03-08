@@ -6,15 +6,19 @@
           "done": true
         },
         "meal1": {
-          "veggies": false,
+          "veggies": true,
           "protein": {
-            "id": "paneer100",
-            "consumed": 100
+            "id": "whey",
+            "consumed": 38
+          },
+          "fats": {
+            "id": "almonds",
+            "consumed": 10
           }
         }
       },
       "checkin": {}
     }
   },
-  "lastSync": "2026-03-08T01:55:57.459Z"
+  "lastSync": "2026-03-08T08:07:52.652Z"
 }
