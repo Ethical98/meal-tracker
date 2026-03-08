@@ -15,10 +15,22 @@
             "id": "almonds",
             "consumed": 10
           }
+        },
+        "meal4": {
+          "alt": "subway"
         }
       },
-      "checkin": {}
+      "checkin": {
+        "dayNumber": 1,
+        "weight": 82,
+        "workout": "",
+        "steps": 0,
+        "water": 3,
+        "energy": 7,
+        "motivation": 9,
+        "sleep": 6
+      }
     }
   },
-  "lastSync": "2026-03-08T08:07:52.652Z"
+  "lastSync": "2026-03-08T08:30:10.909Z"
 }
