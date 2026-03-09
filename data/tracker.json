@@ -109,16 +109,16 @@
         }
       },
       "checkin": {
-        "dayNumber": 0,
-        "weight": 0,
-        "workout": "",
-        "steps": 0,
-        "water": 0,
-        "energy": 6,
-        "motivation": 5,
-        "sleep": 0
+        "dayNumber": 2,
+        "weight": 81.3,
+        "workout": "Did my usual workout for 25 mins",
+        "steps": 12012,
+        "water": 12,
+        "energy": 7,
+        "motivation": 9,
+        "sleep": 7
       }
     }
   },
-  "lastSync": "2026-03-09T16:53:05.990Z"
+  "lastSync": "2026-03-09T16:55:49.070Z"
 }
