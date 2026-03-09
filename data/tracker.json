@@ -55,14 +55,70 @@
       "checkin": {
         "dayNumber": 1,
         "weight": 82,
-        "workout": "",
+        "workout": "Waiting for dumbbells",
         "steps": 0,
-        "water": 3,
+        "water": 9,
         "energy": 7,
         "motivation": 9,
-        "sleep": 6
+        "sleep": 7
+      }
+    },
+    "2026-03-09": {
+      "meals": {
+        "morning": {
+          "done": true
+        },
+        "meal1": {
+          "protein": {
+            "id": "paneer100",
+            "consumed": 100
+          },
+          "fats": {
+            "id": "almonds",
+            "consumed": 10
+          },
+          "veggies": true
+        },
+        "meal3": {
+          "base": {
+            "id": "yogurt120",
+            "consumed": 120
+          },
+          "fruit": {
+            "id": "fruit1",
+            "consumed": 1
+          },
+          "nuts": {
+            "id": "nuts5",
+            "consumed": 5
+          }
+        },
+        "meal4": {
+          "carbs": {
+            "id": "chapati2",
+            "consumed": 40
+          },
+          "protein": {
+            "id": "paneer120",
+            "consumed": 120
+          },
+          "veggies": true
+        },
+        "presleep": {
+          "done": true
+        }
+      },
+      "checkin": {
+        "dayNumber": 0,
+        "weight": 0,
+        "workout": "",
+        "steps": 0,
+        "water": 0,
+        "energy": 6,
+        "motivation": 5,
+        "sleep": 0
       }
     }
   },
-  "lastSync": "2026-03-08T16:44:46.798Z"
+  "lastSync": "2026-03-09T16:53:05.990Z"
 }
