@@ -106,6 +106,17 @@
         },
         "presleep": {
           "done": true
+        },
+        "meal2": {
+          "veggies": true,
+          "carbs": {
+            "id": "whitebrice",
+            "consumed": 40
+          },
+          "protein": {
+            "id": "paneer100b",
+            "consumed": 100
+          }
         }
       },
       "checkin": {
@@ -120,5 +131,5 @@
       }
     }
   },
-  "lastSync": "2026-03-09T16:55:49.070Z"
+  "lastSync": "2026-03-09T17:03:49.540Z"
 }
