@@ -174,8 +174,17 @@
           "done": true
         }
       },
-      "checkin": {}
+      "checkin": {
+        "dayNumber": 3,
+        "weight": 81.3,
+        "workout": "Did my usual workout for 25 mins",
+        "steps": 12173,
+        "water": 10,
+        "energy": 10,
+        "motivation": 9,
+        "sleep": 7.5
+      }
     }
   },
-  "lastSync": "2026-03-10T17:48:57.556Z"
+  "lastSync": "2026-03-10T17:49:50.585Z"
 }
