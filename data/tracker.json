@@ -227,8 +227,17 @@
           }
         }
       },
-      "checkin": {}
+      "checkin": {
+        "dayNumber": 4,
+        "weight": 80.5,
+        "workout": "Core workout ",
+        "steps": 9677,
+        "water": 10,
+        "energy": 7,
+        "motivation": 9,
+        "sleep": 6
+      }
     }
   },
-  "lastSync": "2026-03-11T16:55:21.594Z"
+  "lastSync": "2026-03-11T16:56:14.206Z"
 }
