@@ -184,7 +184,51 @@
         "motivation": 9,
         "sleep": 7.5
       }
+    },
+    "2026-03-11": {
+      "meals": {
+        "morning": {
+          "done": true
+        },
+        "meal1": {
+          "protein": {
+            "id": "whey",
+            "consumed": 38
+          },
+          "fats": {
+            "id": "almonds",
+            "consumed": 10
+          }
+        },
+        "meal2": {
+          "carbs": {
+            "id": "whitebrice",
+            "consumed": 40
+          }
+        },
+        "meal3": {
+          "base": {
+            "id": "yogurt120",
+            "consumed": 120
+          },
+          "fruit": {
+            "id": "fruit1",
+            "consumed": 1
+          },
+          "nuts": {
+            "id": "nuts5",
+            "consumed": 5
+          }
+        },
+        "meal4": {
+          "carbs": {
+            "id": "chapati2",
+            "consumed": 40
+          }
+        }
+      },
+      "checkin": {}
     }
   },
-  "lastSync": "2026-03-10T17:49:50.585Z"
+  "lastSync": "2026-03-11T16:55:21.594Z"
 }
