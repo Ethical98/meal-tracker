@@ -290,8 +290,17 @@
           "veggies": true
         }
       },
-      "checkin": {}
+      "checkin": {
+        "dayNumber": 5,
+        "weight": 79.8,
+        "workout": "Push Day",
+        "steps": 5857,
+        "water": 12,
+        "energy": 7,
+        "motivation": 8,
+        "sleep": 8.5
+      }
     }
   },
-  "lastSync": "2026-03-12T18:10:03.355Z"
+  "lastSync": "2026-03-12T18:11:25.936Z"
 }
