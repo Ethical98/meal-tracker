@@ -300,7 +300,61 @@
         "motivation": 8,
         "sleep": 8.5
       }
+    },
+    "2026-03-13": {
+      "meals": {
+        "morning": {
+          "done": true
+        },
+        "meal1": {
+          "protein": {
+            "id": "paneer100",
+            "consumed": 100
+          },
+          "fats": {
+            "id": "almonds",
+            "consumed": 10
+          },
+          "veggies": true
+        },
+        "meal2": {
+          "protein": {
+            "id": "dal_curd",
+            "consumed": 175
+          },
+          "carbs": {
+            "id": "chapati",
+            "consumed": 40
+          }
+        },
+        "meal3": {
+          "base": {
+            "id": "yogurt120",
+            "consumed": 120
+          },
+          "fruit": {
+            "id": "fruit1",
+            "consumed": 1
+          }
+        },
+        "meal4": {
+          "carbs": {
+            "id": "bread2",
+            "consumed": 60
+          }
+        }
+      },
+      "checkin": {
+        "dayNumber": 6,
+        "weight": 79.8,
+        "workout": "Pull Day",
+        "steps": 6061,
+        "water": 10,
+        "energy": 7,
+        "motivation": 8,
+        "sleep": 8
+      }
     }
   },
-  "lastSync": "2026-03-12T18:11:25.936Z"
+  "lastSync": "2026-03-13T17:19:18.322Z"
 }
