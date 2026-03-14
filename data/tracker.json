@@ -354,7 +354,54 @@
         "motivation": 8,
         "sleep": 8
       }
+    },
+    "2026-03-14": {
+      "meals": {
+        "morning": {
+          "done": true
+        },
+        "meal1": {
+          "protein": {
+            "id": "paneer100",
+            "consumed": 100
+          },
+          "fats": {
+            "id": "almonds",
+            "consumed": 10
+          },
+          "veggies": true
+        },
+        "meal2": {
+          "veggies": true,
+          "carbs": {
+            "id": "chapati",
+            "consumed": 40
+          }
+        },
+        "meal3": {
+          "fruit": {
+            "id": "fruit1",
+            "consumed": 1
+          },
+          "nuts": {
+            "id": "nuts5",
+            "consumed": 5
+          }
+        },
+        "meal4": {
+          "protein": {
+            "id": "paneer120",
+            "consumed": 120
+          },
+          "carbs": {
+            "id": "rice40",
+            "consumed": 40
+          },
+          "veggies": true
+        }
+      },
+      "checkin": {}
     }
   },
-  "lastSync": "2026-03-13T17:19:18.322Z"
+  "lastSync": "2026-03-14T16:35:25.327Z"
 }
