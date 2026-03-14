@@ -400,8 +400,17 @@
           "veggies": true
         }
       },
-      "checkin": {}
+      "checkin": {
+        "dayNumber": 7,
+        "weight": 79.8,
+        "workout": "Legs + HIIT",
+        "steps": 14828,
+        "water": 9,
+        "energy": 8,
+        "motivation": 8,
+        "sleep": 8
+      }
     }
   },
-  "lastSync": "2026-03-14T16:35:25.327Z"
+  "lastSync": "2026-03-14T16:38:24.050Z"
 }
